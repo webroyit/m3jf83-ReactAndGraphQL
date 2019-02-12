@@ -18,13 +18,42 @@ class Signup extends Component{
     
     onSubmit(e){
         e.preventDefault();
-        const newAccount = {
-            username: this.state.username,
-            password: this.state.password,
-            bio: this.state.bio
+
+        // making graphql query
+        // use ${} to add value
+        const graphqlQuery = {
+            query: `
+                mutation {
+                    createAccount(accountData: {username: "${this.state.username}", password: "${this.state.password}", bio: "${this.state.bio}"}) {
+                    _id
+                    username
+                    }
+                }
+            `
         };
 
-        console.log(newAccount);
+        // browser send an option request before it send other request
+        fetch('http://localhost:8080/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(graphqlQuery)
+        })
+            .then(res => {
+                return res.json();
+            })
+            .then(resData =>{
+                if(resData.errors){
+                    return console.log(resData.errors);
+                }
+                console.log(resData);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+        console.log();
     }
     
     render(){
