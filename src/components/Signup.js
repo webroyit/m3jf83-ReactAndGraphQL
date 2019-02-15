@@ -59,6 +59,7 @@ class Signup extends Component{
     render(){
         return(
             <div className="register">
+                <h1>Sign Up</h1>
                 <form onSubmit={this.onSubmit}>
                     <input
                         placeholder="Username"
