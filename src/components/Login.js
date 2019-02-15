@@ -18,6 +18,40 @@ class Login extends Component{
     onSubmit(e){
         e.preventDefault();
 
+        // call the login method in the resolver.js
+        const graphqlQuery = {
+            query: `
+                { 
+                    login(username: "${this.state.username}", password: "${this.state.password}"){
+                        token
+                        accountId
+                    }
+                }
+            `
+        }
+
+        fetch('http://localhost:8080/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(graphqlQuery)
+        })
+            .then(res => {
+                return res.json();
+            })
+            .then(resData =>{
+                if(resData.errors){
+                    return console.log(resData.errors);
+                }
+                console.log(resData);
+                // add the token to local storage
+                localStorage.setItem('token', resData.data.login.token);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
         const data = {
             username: this.state.username,
             password: this.state.password
