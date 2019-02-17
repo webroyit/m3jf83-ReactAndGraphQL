@@ -3,6 +3,7 @@ import './App.css';
 
 import Signup from './components/Signup';
 import Login from './components/Login';
+import AddFood from './components/AddFood';
 
 class App extends Component {
   render() {
@@ -11,6 +12,7 @@ class App extends Component {
         <header className="App-header">
           <Signup />
           <Login />
+          <AddFood />
         </header>
       </div>
     );
