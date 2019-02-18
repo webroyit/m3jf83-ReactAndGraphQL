@@ -5,7 +5,8 @@ class AddFood extends Component{
         super();
         this.state = {
             name: '',
-            price: 0
+            price: 0,
+            token: localStorage.getItem('token')
         };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -16,14 +17,46 @@ class AddFood extends Component{
     }
     
     onSubmit(e){
-        e.preventDefault(); 
+        e.preventDefault();
 
-        const data = {
-            name: this.state.name,
-            price: this.state.price
-        };
+        // call the login method in the resolver.js
+        // if it an object, you must specify which field inside the object to get
+        const graphqlQuery = {
+            query: `
+                mutation{
+                    addFood(foodData:{name: "${this.state.name}", price: ${this.state.price}}){
+                        _id
+                        name
+                        price
+                        date
+                        origin{
+                            username
+                        }
+                    }
+                }
+            `
+        }
 
-        console.log(data);
+        fetch('http://localhost:8080/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this.state.token,
+            },
+            body: JSON.stringify(graphqlQuery)
+        })
+            .then(res => {
+                return res.json();
+            })
+            .then(resData =>{
+                if(resData.errors){
+                    return console.log(resData.errors);
+                }
+                console.log(resData);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
     
     render(){
