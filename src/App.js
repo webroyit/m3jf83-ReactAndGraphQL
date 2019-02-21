@@ -4,6 +4,7 @@ import './App.css';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import AddFood from './components/AddFood';
+import FoodList from './components/FoodList';
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
           <Signup />
           <Login />
           <AddFood />
+          <FoodList />
         </header>
       </div>
     );
