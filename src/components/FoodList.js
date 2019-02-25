@@ -1,8 +1,53 @@
 import React, { Component } from 'react';
 
 class AddFood extends Component{
+    constructor(){
+        super();
+        this.state = {
+            token: localStorage.getItem('token')
+        };
+    }
+
     showFoods(){
-        console.log("it works");
+        // calling for graphql query to get all foods data and you can specify which data to get
+        const graphqlQuery = {
+            query: `
+                query{
+                    foods{
+                        foods{
+                            _id
+                            name
+                            price
+                            date
+                            origin{
+                                username
+                            }
+                        }
+                    }
+                }
+            `
+        };
+
+        fetch('http://localhost:8080/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this.state.token,
+            },
+            body: JSON.stringify(graphqlQuery)
+        })
+            .then(res => {
+                return res.json();
+            })
+            .then(resData =>{
+                if(resData.errors){
+                    return console.log(resData.errors);
+                }
+                console.log(resData.data.foods.foods);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
     
     render(){
